@@ -14,7 +14,7 @@ Tags: Arduino AI Aim, AI chair, AI Aim Assist, AI undetected, Undetected bot, Fo
 ## Limitations
 
 - **USB Host Shields:** Does not support USB Host Shields. Community contributions for this feature are welcome. Plug your mouse into your PC instead of the shield if you are using one.
-- **Chip Compatibility:** Specifically designed for Arduinos with an ATmega32U4 chip, such as the Arduino Micro and Leonardo R3. There's a *chance* that it will work with other Arduinos though, so give it a shot.
+- **Chip Compatibility:** Specifically designed for Arduinos with an ATmega32U4 chip, such as the Leonardo R3. Other Arduinos might work by installing HoodLoader2 but the autospoofer won't work with those.
 
 ## Setup Tutorial
 - [Video Tutorial](https://streamable.com/oknd08) 
