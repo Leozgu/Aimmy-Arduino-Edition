@@ -9,18 +9,15 @@ def handle_client_connection(client_socket):
     while True:
         message = client_socket.recv(1024).decode('utf-8')
         if message:
-            # Distinguish between move and click based on the content of the message
             if ',' in message:
-                # Handle mouse movement
                 x, y = map(int, message.split(','))
-                m.move(x, y)  # Assuming m is your mouse control object
+                m.move(x, y)
             elif message == "1" or message == "0":
-                # Handle mouse click
                 click = int(message)
                 if click == 1:
-                    m.press()  # Press left mouse button
+                    m.press()
                 elif click == 0:
-                    m.release()  # Release left mouse button
+                    m.release()
         else:
             break
     client_socket.close()

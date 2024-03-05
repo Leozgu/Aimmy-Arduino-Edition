@@ -1,151 +1,47 @@
-> [!NOTE]
-> If you enjoy Aimmy, please consider giving us a star ⭐! We appreciate it! :)
+# Aimmy Arduino Edition
+Aimmy 1.5.2... but with Arduino support!
+Wish I could add this to Aimmy 2.0, but unfortunately, it's closed source and I'm not an official dev for Aimmy.
 
-<div align="center">
-  
-  <p>
-    <a href="https://aimmy.dev/" target="_blank">
-      <img width="100%" src="https://raw.githubusercontent.com/Babyhamsta/Aimmy/master/readme_assets/AimmyV2Banner.png"></a>
-  </p>
+also the source is on the master branch so it doesnt show up by default, just change the branch view from main to master
 
-Aimmy is a multi-functional AI-based Aim Aligner that was developed by BabyHamsta & Nori for the purposes of making gaming more accessible for a wider audience.
+**DO NOT DM ME ON DISCORD FOR HELP I WILL BLOCK YOU**
 
-Unlike most products of a similar caliber, Aimmy utilizes DirectML, ONNX, and YOLOV8 to detect players and is written in C# instead of Python. This makes it incredibly fast and efficient, and is one of the only AI Aim Aligners that runs well on AMD GPUs, which would not be able to use hardware acceleration otherwise due to the lack of CUDA support. 
+Tags: Arduino AI Aim, AI chair, AI Aim Assist, AI undetected, Undetected bot, Fortnite Bot Undetected, Fortnite Arduino
 
-Aimmy also has a myriad of [features](#features) that sets itself apart from other AI Aim Aligners, like the ability to hotswap models, and settings that allow you to adjust your aiming accuracy. 
+# Features and Advantages:
+- HID communication (No COM port required! Say goodbye to detection!)
+- Easy to setup, just upload the script to your Arduino and get to work! (Unless you haven't spoofed your Arduino and disabled the COM port)
+- Unlike Aimmy, fully undetected in R6, CoD, Apex, Fortnite, and some other games. If you use this in Valorant, it'll flag your account so you won't get banned for a month or 2 or until you reach Ascendant rank. CS2 FaceIt probably isn't safe either.
 
-Aimmy is 100% free to use, ad-free, and is actively not for profit. Aimmy is not, and will never be for sale, and is considered a **source-available** product as **we actively discourage other developers from making profit-focused forks of Aimmy**.
+# Downsides:
+- As of right now, it does not support USB Host Shields. (Should be easy to add though! If you succeed in adding it, please message me on Discord: Seconb). I can't add Host Shield support because I don't have one.
+- Does not support Arduinos that don't have an ATmega32U4 chip, meaning only the Arduino Micro and Arduino Leonardo R3 will work.
+- The Aimmy part itself is really easy to setup because you just extract it and run Netflix.vmp.exe, but if you don't know how to use an Arduino then have fun doing the tutorial below! I will not help you I swear to god if you DM me asking for help (and not related to the Host Shield thing I said above) I will block you so fast.
 
-Join our Discord: https://discord.gg/Aimmy
+# Setup Tutorial
+- https://streamable.com/oknd08 VIDEO TUTORIAL!!!
+- Download Arduino IDE 1.8.19, accept everything in the setup. https://downloads.arduino.cc/arduino-1.8.19-windows.exe
+- Go to MouseInstructArduino, and spoof your Arduino by pressing 1, then selecting your mouse. Press Y to disable COM port, it's optional but recommended.
+- Go to the download for the tool and extract it anywhere https://github.com/Seconb/Aimmy-Arduino-Edition/releases/tag/v1
+- Go to the MouseInstructArduino folder and run arduinospoofer.exe **AS ADMIN!! (REALLY IMPORTANT)**
+- Go to the MoustInstructArduino folder and run MouseInstructArduino.ino
+- When that opens, press CTRL+SHIFT+I. Search HID-Project and install it. It should say it's by NicoHood
+- Next, click the button in the top left that shows an arrow pointing to the right (the Upload button) then QUICKLY press and hold the reset button for 1 second on your Arduino, then let go. The button should look something like this: https://support.arduino.cc/hc/article_attachments/5779192777244
+- After it says "Done uploading" open Device Manager on your PC, you can just press the Windows Key and start typing "Device Manager" and it should pop up.
+- Click the arrow next to "Ports (COM & LPT)"
+- If the only thing you see is "Communications Port (COM1)" you're good.
+- Close Device Manager and open Control Panel
+- Click "View Devices and Printers", if you see one of the Devices looks like a mouse and it's called HID-compliant device or like the same name as the one you put while spoofing your Arduino, you're good.
+- If you see something other than COM1 or you see an Arduino in Control Panel instead of HID-compliant device or something like that then you messed up in disabling COM port or spoofing. Do some Googling and fix your mistake or ask someone who knows what they're doing to help you. (**DO NOT DM ME ON DISCORD FOR HELP I WILL BLOCK YOU**)
+- If you're an official tester for the program you can DM me.
+- Run Netflix.vmp.exe as Admin
+- Yes I know it looks suspicious as hell when you open "Netflix" and see a bunch of command prompts open and close I swear on god I'm not ratting 😭, It's just what the C# code does. The Netflix thing is also just a security measure against anti-cheats. If you don't believe me, try decompiling the program with ilSpy and decompile the mousemovement.exe using pyinstxtractor or whatever it's called. It's open source anyway so who cares!
+- If it says "Mouse device found" in the console window then that means it's probably working. Use it the same as you would use normal Aimmy. DO NOT CLOSE THE CONSOLE WINDOW OR YOU WILL HAVE TO REOPEN AIMMY.
 
-If you want to show Aimmy to your friends, send them to our website: https://aimmy.dev/
+**DO NOT DM ME ON DISCORD FOR HELP I WILL BLOCK YOU**
 
-## Table of Contents
-[What is the purpose of Aimmy?](#what-is-the-purpose-of-aimmy) | [How does Aimmy Work?](#how-does-aimmy-work) | [Features](#features) | [Setup](#setup) | [How is Aimmy better than similar AI-Based tools?](#how-is-aimmy-better-than-similar-ai-based-tools) | [What is the Web Model?](#what-is-the-web-model) | [How do I train my own model?](#how-do-i-train-my-own-model) | [How do I upload my model to the "Downloadable Models" menu](#how-do-i-upload-my-model-to-the-downloadable-models-menu)
-
-
-
-## What is the purpose of Aimmy?
-### Aimmy was designed for Gamers who are at a severe disadvantage over normal gamers.
-### This includes but is not limited to:
-- Gamers who are physically challenged
-- Gamers who are mentally challenged
-- Gamers who suffer from untreated/untreatable visual impairments
-- Gamers who do not have access to a seperate Human-Interface Device (HID) for controlling the pointer
-- Gamers trying to improve their reaction time
-- Gamers with poor Hand/Eye coordination
-- Gamers who perform poorly in FPS games
-- Gamers who play for long periods in hot environments, causing greasy hands that make aiming difficult 
-
-## How does Aimmy Work?
-Aimmy works by using AI Image Recognition to detect opponents, pointing the player towards the direction of an opponent accordingly. 
-
-The gamer is now left to perform any actions they believe is necessary.
-
-Additionally, a Gamer that uses Aimmy is also given the option to turn on Auto-Trigger. Auto-Trigger relieves the need to repeatedly tap the HID to shoot at a player. This is especially useful for physically challenged users who may have trouble with this action.
-
-## Features
-- AI Aim Aligning
-- Aim Keybind Switching
-- Predictions
-- Bezier Curve Movement + Fake Jitter
-- Undetection Launcher
-- Adjustable FOV, Mouse Sensitivity, X Axis, Y Axis, and Model Confidence
-- Auto Trigger and Trigger Delay
-- Hot Model Swapping (No need to reload application)
-- Hot Config Swapping (switch between presets easily)
-- [Downloadable Model System](#how-do-i-upload-my-model-to-the-downloadable-models-menu)
-- Image capture while playing (For labeling to further AI training)
-
-## Setup
-- Download and Install the x64 version of [.NET Runtime 8.0.X.X](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-8.0.2-windows-x64-installer)
-- Download and Install the x64 version of [Visual C++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe)
-- Download Aimmy from [Releases](https://github.com/BabyHamsta/Aimmy/releases) (Make sure it's the Aimmy zip and not Source zip)
-- Extract the Aimmy.zip file
-- Run Aimmy.exe
-- Choose your Model and Enjoy :)
-
-## How is Aimmy better than similar AI-Based tools?
-Our program comes default with 2 AI models, 1 game specific (Phantom Forces) and 1 universal model. We also let users make their own models, share them, and switch between them painlessly. We also provide a downloadable model menu with dozens of community made models for various games and types of games. This makes Aimmy very versatile and universal for thousands of games.
-
-![Example of Model switching](https://external-content.duckduckgo.com/iu/?u=https://i.imgur.com/4GYUhyp.gif)
-
-We also provide better performance across the board compared to other AI Aim Aligners. Detecting opponents in milliseconds across the board on most CPUs & GPUs.
-
-Aimmy comes pre-bundled with a well-designed user interface that is beautiful, and accessible. With many features to customize your personal user experience.
-
-## What is the Web Model
-The web model is a TFJS (TensorFlow Javascript) export of the model. This allow you to use the model for image labeling, which then images can be sent to us to help further train the PF/Universal model or you can use those images to train your own YOLOv8 model.
-You may wonder, "Why is it in YOLOv5 and not YOLOv8?". This is due to us using the tool called MakeSense, it to me is one of the easiest tools and is all web based. I am sure there are other tools that may accept the YOLOv8 web model.
-
-You can visit MakeSense here: https://www.makesense.ai
-You then can simply load all of your images in and select Object Detection.
-
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/35046774-b70b-4264-8c26-eba5fe0b6b9e)
-
-
-Then run the AI locally, select YOLOv5, and upload all the web model files.
-
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/78e6329d-0b55-453e-baf1-47186020b2b8)
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/0f13a664-0d0e-41aa-84b2-9d7f96daea1c)
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/f0896522-954d-4120-926f-b691673c802a)
-
-
-You can now go through your images and click and drag to highlight any Enemies on screen and approve the auto detected enemies from the web model:
-
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/f1288009-5e7a-4360-a1c5-bee9faf7f387)
-
-Once you are finished labeling you'll want to export the labels for AI training:
-
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/1af932c3-adde-4138-86f5-1c59934afae7)
-![image](https://github.com/MarsQQ/Aimmy/assets/22938086/05cc8837-8131-4035-897c-722301a0233b)
-
-## How do I train my own model
-Please see the video tutorial bellow on how to label images and train your own model. (Redirects to Youtube)
-[![Watch the video on Youtube](https://img.youtube.com/vi/i98wF4218-Q/maxresdefault.jpg)](https://youtu.be/i98wF4218-Q)
-
-## How do I upload my model to the "Downloadable Models" menu?
-
-If you are not aware already, Aimmy contains a "Downloadable Models" tab that allows you to download models developed and shared by the Aimmy Community.
-
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DownloadableModels.png">
-
-Aimmy pulls these models from the [Aimmy repository](https://github.com/Babyhamsta/Aimmy/tree/master/models), this means **anyone can upload models to the "Downloadable Models" tab by making a pull request**.
-
-To start, please note that if you would like to be credited for your work, name your model as:
-**[Game Name/Model Name]** by **[The Creator]**
-
-If you would like to stay anonymous however, you may only list the Game Name/Model Name.
-
-Now, fork the Aimmy Repository
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT1.png">
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT2.png">
-
-After that, go to your fork's model folder
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT3.png">
-
-Press "Add File"
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT4.png">
-
-Drag your model onto the area that contains the text "Drag additional files here to add them to your repository"
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT5.png">
-
-and press "Commit Changes" when the green progress bar disappears
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT6.png">
-
-Now go to the "Pull requests" tab
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT7.png">
-
-Create a new pull request
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT8.png">
-
-Create the pull request
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT9.png">
-
-Create the pull request (again)
-<img src="https://raw.githubusercontent.com/MarsQQ/Aimmy/master/readme_assets/DT10.png">
-
-You are done! We will review your pull request and your model will be added in 24-48 hours. If you would like to remove your model from the "Downloadable Models" tab, you may make another pull request or contact us on the Issues tab.
-
-For anyone who does this, thank you so much =D, Aimmy genuinely thrives with community contributions and support, and making and sharing your Aimmy models genuinely means a lot to us! Thank you!
-</div>
+# Credits:
+- [https://github.com/khanxbahria/MouseInstruct]([url](https://github.com/khanxbahria/MouseInstruct)) - HUGE HELP THIS REPO IS REALLY AWESOME AND THE ONLY REASON WHY THIS EXISTS GO TO IT AND STAR IT!!!!
+- ChatGPT Plus - Self explanatory, completed the parts I was too lazy to write
+- Seconb (me) - I did all the work over a span of like 6 or 7 hours (the first prototype took like 4 hours and didn't work so I had to start from scratch, then the second version worked)
+- The full team behind Aimmy obviously because I didn't make Aimmy
