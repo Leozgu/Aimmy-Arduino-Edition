@@ -1,6 +1,8 @@
-## Aimmy Arduino Edition
+## Aimmy Arduino Edition!
 Aimmy 1.5.2... but with Arduino support!
 Wish I could add this to Aimmy 2.0, but unfortunately, it's closed source and I'm not an official dev for Aimmy.
+
+Star this repo to support me, but to support Aimmy's development donate to Babyhamsta via the attached sponsor link!
 
 **DO NOT ASK FOR HELP ON DISCORD. ONLY DM ME IF YOU WANNA ADD HOST SHIELD SUPPORT.**
 
