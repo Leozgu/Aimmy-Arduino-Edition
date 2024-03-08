@@ -22,7 +22,7 @@ Tags: Arduino AI Aim, AI chair, AI Aim Assist, AI undetected, Undetected bot, Fo
 - [Video Tutorial](https://streamable.com/oknd08) 
 - Download and install [Arduino IDE 1.8.19](https://downloads.arduino.cc/arduino-1.8.19-windows.exe)
 - Download [Aimmy Arduino Edition Download](https://github.com/Seconb/Aimmy-Arduino-Edition/releases/tag/v1) and extract it
-- Go to the eMouseInstructArduino folder and run arduinospoofer.exe **as admin**
+- Go to the MouseInstructArduino folder and run arduinospoofer.exe **as admin**
 - Once that finishes, open MouseInstructArduino.ino
 - In that window, press CTRL+SHIFT+I. Search HID-Project and install it
 - Next, click the upload button (the arrow pointing to the right in the top left of the Arduino IDE), wait one second, then press the red RESET button on your Arduino in real life
