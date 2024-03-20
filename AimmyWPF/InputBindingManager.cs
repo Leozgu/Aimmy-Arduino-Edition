@@ -1,5 +1,6 @@
 ﻿using Gma.System.MouseKeyHook;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 public class InputBindingManager
@@ -10,9 +11,7 @@ public class InputBindingManager
     public string CurrentBinding { get; private set; }
 
     public event Action<string> OnBindingSet;
-
     public event Action<string> OnBindingPressed;
-
     public event Action<string> OnBindingReleased;
 
     public void SetupDefault(string KeyCode)

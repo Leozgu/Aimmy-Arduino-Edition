@@ -11,8 +11,6 @@
     <SignAssembly>True</SignAssembly>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AssemblyName>Netflix</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -44,6 +42,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="InputInterceptor-Forked" Version="1.0.0" />
     <PackageReference Include="KdTree" Version="1.4.1" />
     <PackageReference Include="MaterialDesignColors" Version="3.0.0-ci472" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0-ci472" />
@@ -56,9 +55,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="BackupFiles\OldOverlayWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

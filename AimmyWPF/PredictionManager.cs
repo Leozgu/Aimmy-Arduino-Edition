@@ -1,5 +1,10 @@
-﻿using Accord.Statistics.Running;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Accord.Math;
+using Accord.Statistics.Filters;
+using Accord.Statistics.Running;
+using static Accord.Math.FourierTransform;
 
 namespace AimmyWPF
 {
@@ -12,21 +17,16 @@ namespace AimmyWPF
             public DateTime Timestamp;
         }
 
-        private KalmanFilter2D kalmanFilter;
-        private DateTime lastUpdateTime;
+        KalmanFilter2D kalmanFilter;
 
-        public PredictionManager()
+        public void InitializeKalmanFilter()
         {
             kalmanFilter = new KalmanFilter2D();
-            lastUpdateTime = DateTime.UtcNow;
         }
 
-        public void UpdateKalmanFilter(Detection detection)
+        public void UpdateKalmanFilter(double detectedX, double detectedY)
         {
-            var currentTime = DateTime.UtcNow;
-
-            kalmanFilter.Push(detection.X, detection.Y);
-            lastUpdateTime = currentTime;
+            kalmanFilter.Push(detectedX, detectedY);
         }
 
         public Detection GetEstimatedPosition()
@@ -39,10 +39,8 @@ namespace AimmyWPF
             double velocityX = kalmanFilter.XAxisVelocity;
             double velocityY = kalmanFilter.YAxisVelocity;
 
-            // Calculate time since last update
-            double timeStep = (DateTime.UtcNow - lastUpdateTime).TotalSeconds;
-
             // Predict next position based on current position and velocity
+            double timeStep = 0.01;
             double predictedX = currentX + velocityX * timeStep;
             double predictedY = currentY + velocityY * timeStep;
 

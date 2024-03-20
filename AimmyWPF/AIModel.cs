@@ -1,38 +1,38 @@
-﻿using AimmyWPF.Class;
+﻿using KdTree.Math;
 using KdTree;
-using KdTree.Math;
-using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
-using System;
+using Microsoft.ML.OnnxRuntime;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace AimmyAimbot
 {
-    public class AIModel : IDisposable
+    public class AIModel
     {
         private const int IMAGE_SIZE = 640;
-        private const int NUM_DETECTIONS = 8400; // Standard for OnnxV8 model (Shape: 1x5x8400)
+        private const int NUM_DETECTIONS = 8400;
 
         private readonly RunOptions _modeloptions;
-        private InferenceSession _onnxModel;
+        private readonly InferenceSession _onnxModel;
 
         public float ConfidenceThreshold = 0.6f;
         public bool CollectData = false;
         public int FovSize = 640;
 
+
         private DateTime lastSavedTime = DateTime.MinValue;
-        private List<string> _outputNames;
+        private readonly List<string> _outputNames;
 
-        private Bitmap _screenCaptureBitmap = null;
-
-        // Image size will always be 640x640
-        private static byte[] _rgbValuesCache = new byte[640 * 640 * 3];
+        private readonly MemoryStream _captureStream = new MemoryStream(IMAGE_SIZE * IMAGE_SIZE * 4);
+        private readonly float[] _imageArray = new float[3 * IMAGE_SIZE * IMAGE_SIZE];
 
         public AIModel(string modelPath)
         {
@@ -46,49 +46,33 @@ namespace AimmyAimbot
                 ExecutionMode = ExecutionMode.ORT_PARALLEL
             };
 
-            // Attempt to load via DirectML (else fallback to CPU)
             try
             {
-                LoadViaDirectML(sessionOptions, modelPath);
+                sessionOptions.AppendExecutionProvider_DML();
+                _onnxModel = new InferenceSession(modelPath, sessionOptions);
+                _outputNames = _onnxModel.OutputMetadata.Keys.ToList();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"There was an error starting the OnnxModel via DirectML: {ex}\n\nProgram will attempt to use CPU only, performance may be poor.", "Model Error");
-                LoadViaCPU(sessionOptions, modelPath);
+                try
+                {
+                    sessionOptions.AppendExecutionProvider_CPU();
+                    _onnxModel = new InferenceSession(modelPath, sessionOptions);
+                    _outputNames = _onnxModel.OutputMetadata.Keys.ToList();
+                }
+                catch (Exception innerEx)
+                {
+                    MessageBox.Show($"There was an error starting the model via CPU: {innerEx}", "Model Error");
+                    System.Windows.Application.Current.Shutdown();
+                }
             }
 
-            // Validate the onnx model output shape (ensure model is OnnxV8)
-            ValidateOnnxShape();
-        }
-
-        private void LoadViaDirectML(SessionOptions sessionOptions, string modelPath)
-        {
-            sessionOptions.AppendExecutionProvider_DML();
-            _onnxModel = new InferenceSession(modelPath, sessionOptions);
-            _outputNames = _onnxModel.OutputMetadata.Keys.ToList();
-        }
-
-        private void LoadViaCPU(SessionOptions sessionOptions, string modelPath)
-        {
-            try
-            {
-                sessionOptions.AppendExecutionProvider_CPU();
-                _onnxModel = new InferenceSession(modelPath, sessionOptions);
-                _outputNames = _onnxModel.OutputMetadata.Keys.ToList();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error starting the model via CPU: {e}");
-                System.Windows.Application.Current.Shutdown();
-            }
-        }
-
-        private void ValidateOnnxShape()
-        {
+            // Checking output shape
             foreach (var output in _onnxModel.OutputMetadata)
             {
                 var shape = _onnxModel.OutputMetadata[output.Key].Dimensions;
-                if (shape.Length != 3 || shape[0] != 1 || shape[1] != 5 || shape[2] != NUM_DETECTIONS)
+                if (shape.Length != 3 || shape[0] != 1 || shape[1] != 5 || shape[2] != 8400)
                 {
                     MessageBox.Show($"Output shape {string.Join("x", shape)} does not match the expected shape of 1x5x8400.\n\nThis model will not work with Aimmy, please use an ONNX V8 model.", "Model Error");
                 }
@@ -101,21 +85,12 @@ namespace AimmyAimbot
             public float Confidence { get; set; }
         }
 
-        public static float AIConfidence { get; set; }
-
-        public Bitmap ScreenGrab(Rectangle detectionBox)
+        public static Bitmap ScreenGrab(Rectangle detectionBox)
         {
-            if (_screenCaptureBitmap == null || _screenCaptureBitmap.Width != detectionBox.Width || _screenCaptureBitmap.Height != detectionBox.Height)
-            {
-                _screenCaptureBitmap?.Dispose();
-                _screenCaptureBitmap = new Bitmap(detectionBox.Width, detectionBox.Height);
-            }
-
-            using (var g = Graphics.FromImage(_screenCaptureBitmap))
-            {
-                g.CopyFromScreen(detectionBox.Left, detectionBox.Top, 0, 0, detectionBox.Size);
-            }
-            return _screenCaptureBitmap;
+            Bitmap bmp = new Bitmap(detectionBox.Width, detectionBox.Height);
+            Graphics g = Graphics.FromImage(bmp);
+            g.CopyFromScreen(detectionBox.Left, detectionBox.Top, 0, 0, detectionBox.Size);
+            return bmp;
         }
 
         public static float[] BitmapToFloatArray(Bitmap image)
@@ -131,13 +106,14 @@ namespace AimmyAimbot
             byte[] rgbValues = new byte[bytes];
 
             Marshal.Copy(ptr, rgbValues, 0, bytes);
-            for (int i = 0; i < rgbValues.Length / 3; i++)
+            Parallel.For(0, rgbValues.Length / 3, i =>
             {
                 int index = i * 3;
-                result[i] = rgbValues[index + 2] / 255.0f; // R
-                result[height * width + i] = rgbValues[index + 1] / 255.0f; // G
-                result[2 * height * width + i] = rgbValues[index] / 255.0f; // B
-            }
+                int counter = i;
+                result[counter] = rgbValues[index + 2] / 255.0f; // R
+                result[height * width + counter] = rgbValues[index + 1] / 255.0f; // G
+                result[2 * height * width + counter] = rgbValues[index] / 255.0f; // B
+            });
 
             image.UnlockBits(bmpData);
 
@@ -146,6 +122,7 @@ namespace AimmyAimbot
 
         public async Task<Prediction> GetClosestPredictionToCenterAsync()
         {
+
             // Define the detection box
             int halfScreenWidth = Screen.PrimaryScreen.Bounds.Width / 2;
             int halfScreenHeight = Screen.PrimaryScreen.Bounds.Height / 2;
@@ -159,7 +136,7 @@ namespace AimmyAimbot
             Bitmap frame = ScreenGrab(detectionBox);
 
             // Save frame asynchronously if the option is turned on
-            if (CollectData && Bools.ConstantTracking == false)
+            if (CollectData)
             {
                 DateTime currentTime = DateTime.Now;
                 if ((currentTime - lastSavedTime).TotalSeconds >= 0.5)
@@ -195,10 +172,9 @@ namespace AimmyAimbot
 
             object treeLock = new object();
 
-            foreach (var i in filteredIndices)
+            Parallel.ForEach(filteredIndices, i =>
             {
                 float objectness = outputTensor[0, 4, i];
-                AIConfidence = objectness;
 
                 float x_center = outputTensor[0, 0, i];
                 float y_center = outputTensor[0, 1, i];
@@ -226,7 +202,7 @@ namespace AimmyAimbot
                         tree.Add(new[] { centerX, centerY }, prediction);
                     }
                 }
-            }
+            });
 
             // Querying the KDTree for the closest prediction to the center.
             var nodes = tree.GetNearestNeighbours(new[] { IMAGE_SIZE / 2.0f, IMAGE_SIZE / 2.0f }, 1);
@@ -237,8 +213,7 @@ namespace AimmyAimbot
         public void Dispose()
         {
             _onnxModel?.Dispose();
-            _screenCaptureBitmap?.Dispose();
-            GC.SuppressFinalize(this); // called to prevent the finalizer from running if the object is already disposed of.
+            _captureStream?.Dispose();
         }
     }
 }
