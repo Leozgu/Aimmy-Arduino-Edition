@@ -15,7 +15,7 @@ namespace AimmyWPF.UserController
     /// </summary>
     public partial class AInfoSection : UserControl
     {
-        private static async Task<(string, string)> GetLatestReleaseInfo()
+        static async Task<(string, string)> GetLatestReleaseInfo()
         {
             using (var client = new HttpClient())
             {
@@ -31,7 +31,7 @@ namespace AimmyWPF.UserController
             }
         }
 
-        private static async Task DoUpdate(string currentVersion)
+        static async Task DoUpdate(string currentVersion)
         {
             // Download the newest release of Aimmy to %temp%
             string envTempPath = Path.GetTempPath();
@@ -96,8 +96,7 @@ namespace AimmyWPF.UserController
         public AInfoSection()
         {
             InitializeComponent();
-            CheckForUpdates.Click += async (s, e) =>
-            {
+            CheckForUpdates.Click += async (s, e) => {
                 new NoticeBar("Checking for updates, please wait!").Show();
                 await DoUpdate(VersionNumber.Content.ToString());
             };
